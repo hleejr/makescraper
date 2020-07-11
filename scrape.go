@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 
 	"github.com/gocolly/colly"
 )
@@ -23,13 +25,11 @@ func writeFile(name string, data string) {
 }
 
 func getPlayerLinks() []string {
-
-	c := colly.NewCollector()
 	playerLinks := []string{}
+	c := colly.NewCollector()
 
-	c.OnHTML(".row playerList", func(e *colly.HTMLElement) {
-		fmt.Println("found an a tag")
-
+	c.OnHTML("a.playerList", func(e *colly.HTMLElement) {
+		fmt.Println(e)
 	})
 
 	c.OnRequest(func(r *colly.Request) {
@@ -45,38 +45,38 @@ func getPlayerLinks() []string {
 // http://go-colly.org/docs/examples/basic/
 func main() {
 	// Instantiate default collector
-	// c := colly.NewCollector()
+	c := colly.NewCollector()
 
-	// // On every a element which has href attribute call callback
-	// c.OnHTML("#block-league-content > section.row.nba-player-index__row > section:nth-child(1) > a:nth-child(2) > p", func(e *colly.HTMLElement) {
-	// 	testPlayer := playerInfo{Name: e.Text}
-	// 	testJSON, _ := json.Marshal(testPlayer)
+	// On every a element which has href attribute call callback
+	c.OnHTML("#block-league-content > section.row.nba-player-index__row > section:nth-child(1) > a:nth-child(2) > p", func(e *colly.HTMLElement) {
+		testPlayer := playerInfo{Name: e.Text}
+		testJSON, _ := json.Marshal(testPlayer)
 
-	// 	// Print player name
-	// 	// fmt.Printf("Player name: %q\n", e.Text)
-	// 	// fmt.Printf("%s \n", testPlayer.Name)
-	// 	// fmt.Printf("%s \n", string(testJSON))
-	// 	writeFile("output.json", string(testJSON))
-	// })
+		// Print player name
+		// fmt.Printf("Player name: %q\n", e.Text)
+		// fmt.Printf("%s \n", testPlayer.Name)
+		// fmt.Printf("%s \n", string(testJSON))
+		writeFile("output.json", string(testJSON))
+	})
 
-	// // Before making a request print "Visiting ..."
-	// c.OnRequest(func(r *colly.Request) {
-	// 	fmt.Println("Visiting", r.URL.String())
-	// })
+	// Before making a request print "Visiting ..."
+	c.OnRequest(func(r *colly.Request) {
+		fmt.Println("Visiting", r.URL.String())
+	})
 
-	// c.OnError(func(_ *colly.Response, err error) {
-	// 	log.Println("Something went wrong:", err)
-	// })
+	c.OnError(func(_ *colly.Response, err error) {
+		log.Println("Something went wrong:", err)
+	})
 
-	// c.OnResponse(func(r *colly.Response) {
-	// 	fmt.Println("Visited", r.Request.URL)
-	// })
+	c.OnResponse(func(r *colly.Response) {
+		fmt.Println("Visited", r.Request.URL)
+	})
 
-	// c.OnScraped(func(r *colly.Response) {
-	// 	fmt.Println("Finished", r.Request.URL)
-	// })
+	c.OnScraped(func(r *colly.Response) {
+		fmt.Println("Finished", r.Request.URL)
+	})
 
-	// // Start scraping on https://hackerspaces.org
-	// c.Visit("https://www.nba.com/players")
-	getPlayerLinks()
+	// Start scraping on https://hackerspaces.org
+	c.Visit("https://www.nba.com/players")
+	// getPlayerLinks()
 }
