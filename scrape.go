@@ -28,10 +28,8 @@ func getPlayerLinks() []string {
 	playerLinks := []string{}
 
 	c.OnHTML(".row playerList", func(e *colly.HTMLElement) {
-		fmt.Println("found section")
-		e.ForEach(".row playerList", func(_ int, el *colly.HTMLElement) {
-			fmt.Println("found a a tag")
-		})
+		fmt.Println("found an a tag")
+
 	})
 
 	c.OnRequest(func(r *colly.Request) {
