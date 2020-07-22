@@ -15,3 +15,7 @@
 vendor/
 .vscode/
 makescraper
+
+
+# Used for local system golang command utilities
+git.txt
