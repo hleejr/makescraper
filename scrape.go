@@ -12,6 +12,7 @@ import (
 
 type playerInfo struct {
 	Name   string `json:"name"`
+	Image  string `json:"img"`
 	League string `json:"league"`
 	Played string `json:"played"`
 	Starts string `json:"starts"`
@@ -108,6 +109,10 @@ func getPlayerInfo() []playerInfo {
 		// On every a element which has href attribute call callback
 		c.OnHTML("h1 > span", func(e *colly.HTMLElement) {
 			player.Name = e.Text
+		})
+
+		c.OnHTML("#meta > div.media-item > img", func(e *colly.HTMLElement) {
+			player.Image = e.Attr("src")
 		})
 
 		c.OnHTML("#per_game tfoot", func(e *colly.HTMLElement) {
