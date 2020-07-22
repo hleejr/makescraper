@@ -31,7 +31,6 @@ type playerInfo struct {
 	FTP    string `json:"ftp"`
 	ORB    string `json:"orb"`
 	DRB    string `json:"drb"`
-	TRB    string `json:"trb"`
 	AST    string `json:"ast"`
 	STL    string `json:"stl"`
 	BLK    string `json:"blk"`
@@ -189,13 +188,9 @@ func getPlayerInfo() []playerInfo {
 					if player.DRB == "" {
 						player.DRB = el.Text
 					}
-				case "trb_per_g":
-					if player.TRB == "" {
-						player.TRB = el.Text
-					}
 				case "ast_per_g":
 					if player.AST == "" {
-						player.TRB = el.Text
+						player.AST = el.Text
 					}
 				case "stl_per_g":
 					if player.STL == "" {
