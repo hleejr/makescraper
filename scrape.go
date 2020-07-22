@@ -38,6 +38,7 @@ type playerInfo struct {
 	TOV    string `json:"tov"`
 	Fouls  string `json:"fouls"`
 	PTS    string `json:"pts"`
+	Awards string `json:"awards"`
 }
 
 func writeFile(name string, data string) {
@@ -219,6 +220,14 @@ func getPlayerInfo() []playerInfo {
 					}
 				}
 			})
+		})
+
+		c.OnHTML("#bling li", func(e *colly.HTMLElement) {
+			if player.Awards == "" {
+				player.Awards = e.Text
+			} else {
+				player.Awards = player.Awards + "\n" + e.Text
+			}
 		})
 
 		// Before making a request print "Visiting ..."
