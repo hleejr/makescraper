@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -311,7 +312,8 @@ func getCurrentPlayers() []string {
 
 func main() {
 	// players := getPlayerInfo()
-	// JSON, _ := json.Marshal(players)
+	actives := getCurrentPlayers()
+	JSON, _ := json.Marshal(actives)
 	// writeFile("output.json", string(JSON))
-	fmt.Println(getCurrentPlayers())
+	writeFile("output2.json", string(JSON))
 }
