@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,35 +10,36 @@ import (
 )
 
 type playerInfo struct {
-	Name   string `json:"name"`
-	Image  string `json:"img"`
-	League string `json:"league"`
-	Played string `json:"played"`
-	Starts string `json:"starts"`
-	Min    string `json:"min"`
-	FGM    string `json:"fgm"`
-	FGA    string `json:"fga"`
-	FGP    string `json:"fgp"`
-	THPM   string `json:"thpm"`
-	THPA   string `json:"thpa"`
-	THPP   string `json:"thpp"`
-	TWPM   string `json:"twpm"`
-	TWPA   string `json:"twpa"`
-	TWPP   string `json:"twpp"`
-	EFGP   string `json:"efgp"`
-	FTM    string `json:"ftm"`
-	FTA    string `json:"fta"`
-	FTP    string `json:"ftp"`
-	ORB    string `json:"orb"`
-	DRB    string `json:"drb"`
-	TRB    string `json:"trb"`
-	AST    string `json:"ast"`
-	STL    string `json:"stl"`
-	BLK    string `json:"blk"`
-	TOV    string `json:"tov"`
-	Fouls  string `json:"fouls"`
-	PTS    string `json:"pts"`
-	Awards string `json:"awards"`
+	Name     string `json:"name"`
+	Position string `json:"pos"`
+	Image    string `json:"img"`
+	League   string `json:"league"`
+	Played   string `json:"played"`
+	Starts   string `json:"starts"`
+	Min      string `json:"min"`
+	FGM      string `json:"fgm"`
+	FGA      string `json:"fga"`
+	FGP      string `json:"fgp"`
+	THPM     string `json:"thpm"`
+	THPA     string `json:"thpa"`
+	THPP     string `json:"thpp"`
+	TWPM     string `json:"twpm"`
+	TWPA     string `json:"twpa"`
+	TWPP     string `json:"twpp"`
+	EFGP     string `json:"efgp"`
+	FTM      string `json:"ftm"`
+	FTA      string `json:"fta"`
+	FTP      string `json:"ftp"`
+	ORB      string `json:"orb"`
+	DRB      string `json:"drb"`
+	TRB      string `json:"trb"`
+	AST      string `json:"ast"`
+	STL      string `json:"stl"`
+	BLK      string `json:"blk"`
+	TOV      string `json:"tov"`
+	Fouls    string `json:"fouls"`
+	PTS      string `json:"pts"`
+	Awards   string `json:"awards"`
 }
 
 func writeFile(name string, data string) {
@@ -113,6 +113,18 @@ func getPlayerInfo() []playerInfo {
 
 		c.OnHTML("#meta > div.media-item > img", func(e *colly.HTMLElement) {
 			player.Image = e.Attr("src")
+		})
+
+		c.OnHTML("#per_game tbody", func(e *colly.HTMLElement) {
+			e.ForEach("#per_game tbody tr td", func(_ int, el *colly.HTMLElement) {
+
+				switch el.Attr("data-stat") {
+				case "pos":
+					if player.Position == "" {
+						player.Position = el.Text
+					}
+				}
+			})
 		})
 
 		c.OnHTML("#per_game tfoot", func(e *colly.HTMLElement) {
@@ -261,8 +273,45 @@ func getPlayerInfo() []playerInfo {
 
 }
 
+func getCurrentPlayers() []string {
+	actives := []string{}
+
+	c := colly.NewCollector()
+
+	c.OnHTML("table", func(e *colly.HTMLElement) {
+		e.ForEach("table tbody tr td a", func(_ int, el *colly.HTMLElement) {
+			if strings.Contains(el.Attr("href"), "player") {
+				actives = append(actives, el.Text)
+			}
+		})
+	})
+
+	// Before making a request print "Visiting ..."
+	c.OnRequest(func(r *colly.Request) {
+		fmt.Println("Visiting", r.URL.String())
+
+	})
+
+	c.OnError(func(_ *colly.Response, err error) {
+		log.Println("Something went wrong:", err)
+	})
+
+	c.OnResponse(func(r *colly.Response) {
+		fmt.Println("Visited", r.Request.URL)
+	})
+
+	c.OnScraped(func(r *colly.Response) {
+		fmt.Println("Finished", r.Request.URL)
+	})
+
+	c.Visit("https://basketball.realgm.com/nba/players")
+
+	return actives
+}
+
 func main() {
-	players := getPlayerInfo()
-	JSON, _ := json.Marshal(players)
-	writeFile("output.json", string(JSON))
+	// players := getPlayerInfo()
+	// JSON, _ := json.Marshal(players)
+	// writeFile("output.json", string(JSON))
+	fmt.Println(getCurrentPlayers())
 }
