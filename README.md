@@ -3,9 +3,8 @@
 ### 📚 Table of Contents
 
 1. [Project Structure](#project-structure)
-2. [Getting Started](#getting-started)
-3. [Deliverables](#deliverables)
-4. [Resources](#resources)
+2. [Getting Started](#getting-started
+3. [Resources](#resources)
 
 ## Project Structure
 
