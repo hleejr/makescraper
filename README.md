@@ -19,7 +19,7 @@
 
 Run each command line-by-line in your terminal to set up the utility:
 ```
-$ git clone https://github.com/hleejr/Auto-Commit.git
+$ git clone https://github.com/hleejr/makescraper.git
 $ cd makesite
 $ git remote rm origin
 ```
