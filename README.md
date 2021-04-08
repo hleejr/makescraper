@@ -3,7 +3,7 @@
 ### 📚 Table of Contents
 
 1. [Project Structure](#project-structure)
-2. [Getting Started](#getting-started
+2. [Getting Started](#getting-started)
 3. [Resources](#resources)
 
 ## Project Structure
