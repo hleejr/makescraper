@@ -48,7 +48,7 @@
 Run each command line-by-line in your terminal to set up the utility:
 ```
 $ git clone https://github.com/hleejr/makescraper.git
-$ cd makesite
+$ cd makescraper
 $ git remote rm origin
 ```
 Then add the link to your repository as the new origin
